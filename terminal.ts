@@ -81,7 +81,7 @@ export class Terminal
     public resetAsync() { return this.write( this.enc( this._reset() ) ); }
 
     protected _clear( mode: number ) { return `${ this.esc }${ mode }J`; }
-    public clear( mode = Terminal.CLEAR.ALL ) { return ( this.syncMode ? this.clearSync : this.clearAsync )( mode ) ); }
+    public clear( mode = Terminal.CLEAR.ALL ) { return ( this.syncMode ? this.clearSync : this.clearAsync )( mode ); }
     public clearSync( mode = Terminal.CLEAR.ALL ) { return this.writeSync( this.enc( this._clear( mode ) ) ); }
     public clearAsync( mode = Terminal.CLEAR.ALL ) { return this.write( this.enc( this._clear( mode ) ) ); }
 
