@@ -108,12 +108,12 @@ export class Tui
 
     public set onInput( onInput: OnInputEvent )
     {
-        this.input.setOnInput( onInput );
+        this.input.onInput = onInput;
     }
 
     public set onMouse( onMouse: OnMouseEvent )
     {
-        this.input.setOnMouse( onMouse );
+        this.input.onMouse = onMouse;
     }
 
     private _onMouse()
