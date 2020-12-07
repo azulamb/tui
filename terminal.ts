@@ -76,32 +76,32 @@ export class Terminal
     public writeAsync( buf: Uint8Array ) { return this.writer.write( buf ); }
 
     protected _reset() { return `${ this.esc }0m`; }
-    public reset() { return this.syncMode ? this.resetSync() : this.resetAsync(); }
+    public reset() { return this[ this.syncMode ? 'resetSync' : 'resetAsync' ](); }
     public resetSync() { return this.writeSync( this.enc( this._reset() ) ); }
-    public resetAsync() { return this.writeAsync( this.enc( this._reset() ) ); }
+    public resetAsync() { return this.write( this.enc( this._reset() ) ); }
 
     protected _clear( mode: number ) { return `${ this.esc }${ mode }J`; }
-    public clear( mode = Terminal.CLEAR.ALL ) { return this.syncMode ? this.clearSync( mode ) : this.clearAsync( mode ); }
+    public clear( mode = Terminal.CLEAR.ALL ) { return this[ this.syncMode ? 'clearSync' : 'clearAsync' ]( mode ); }
     public clearSync( mode = Terminal.CLEAR.ALL ) { return this.writeSync( this.enc( this._clear( mode ) ) ); }
-    public clearAsync( mode = Terminal.CLEAR.ALL ) { return this.writeAsync( this.enc( this._clear( mode ) ) ); }
+    public clearAsync( mode = Terminal.CLEAR.ALL ) { return this.write( this.enc( this._clear( mode ) ) ); }
 
     protected _scroll( scroll: number ) { return `${ this.esc }${ Math.abs( scroll) }${ scroll < 0 ? 'T' : 'S' }`; }
-    public scroll( scroll: number ) { return this.syncMode ? this.scrollSync( scroll ) : this.scrollAsync( scroll ); }
+    public scroll( scroll: number ) { return this[ this.syncMode ? 'scrollSync' : 'scrollAsync' ]( scroll ); }
     public scrollSync( scroll: number ) { return this.writeSync( this.enc( this._scroll( scroll ) ) ); }
-    public scrollAsync( scroll: number ) { return this.writeAsync( this.enc( this._scroll( scroll ) ) ); }
+    public scrollAsync( scroll: number ) { return this.write( this.enc( this._scroll( scroll ) ) ); }
 
     protected _showCursor( show: boolean ) { return `${ this.esc }?25${ show ? 'h' : 'l' }`; }
-    public showCursor( show: boolean ) { return this.syncMode ? this.showCursorSync( show ) : this.showCursorAsync( show ); }
-    public showCursorSync( show: boolean ) { return this.writeSync( this.enc( this._showCursor( show ) ) ); }
-    public showCursorAsync( show: boolean ) { return this.writeAsync( this.enc( this._showCursor( show ) ) ); }
+    public showCursor( show: boolean ) { return this[ this.syncMode ? 'showCursorSync' : 'showCursorAsync' ]( show ); }
+    public showCursorSync( show: boolean ) { return this.write( this.enc( this._showCursor( show ) ) ); }
+    public showCursorAsync( show: boolean ) { return this.write( this.enc( this._showCursor( show ) ) ); }
 
     protected _move( x: number, y: number ) { return `${ this.esc }${ y };${ x }H`; }
-    public move( x: number = 1, y: number = 1 ) { return this.syncMode ? this.moveSync( x, y ) : this.moveAsync( x, y ); }
+    public move( x: number = 1, y: number = 1 ) { return this[ this.syncMode ? 'moveSync' : 'moveAsync' ]( x, y ); }
     public moveSync( x: number = 1, y: number = 1 ) { return this.writeSync( this.enc( this._move( x, y ) ) ); }
-    public moveAsync( x: number = 1, y: number = 1 ) { return this.writeAsync( this.enc( this._move( x, y ) ) ); }
+    public moveAsync( x: number = 1, y: number = 1 ) { return this.write( this.enc( this._move( x, y ) ) ); }
 
     protected _enableMouse( enable: boolean ) { return `${ this.esc }?1000;1006;1015${ enable ? 'h' : 'l' }`; }
-    public enableMouse( enable: boolean ) { return this.syncMode ? this.enableMouseSync( enable ) : this.enableMouseAsync( enable ); }
+    public enableMouse( enable: boolean ) { return this[ this.syncMode ? 'enableMouseSync' : 'enableMouseAsync' ]( enable ); }
     public enableMouseSync( enable: boolean ) { return this.writeSync( this.enc( this._enableMouse( enable ) ) ); }
-    public enableMouseAsync( enable: boolean ) { return this.writeAsync( this.enc( this._enableMouse( enable ) ) ); }
+    public enableMouseAsync( enable: boolean ) { return this.write( this.enc( this._enableMouse( enable ) ) ); }
 }
