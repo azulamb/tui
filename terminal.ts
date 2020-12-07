@@ -32,7 +32,7 @@ export class Terminal
         this.setWriter( Deno.stdout );
     }
 
-    public setOnResize( callback: () => any )
+    public set onResize( callback: () => any )
     {
         this.stopMonitorSignal();
         this.disposeSignal = onSignal( Deno.Signal.SIGWINCH, () =>

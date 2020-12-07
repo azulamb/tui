@@ -1,5 +1,5 @@
 export interface OnInputEvent { ( buf: Uint8Array ) : ( void | Promise<any> ); }
-export interface OnMouseEvent { ( event: MouseEventData ) : ( null | Promise<any> ) }
+export interface OnMouseEvent { ( event: MouseEventData ) : ( void | Promise<any> ) }
 export interface MouseEventData
 {
     x: number;
@@ -13,8 +13,8 @@ export interface MouseEventData
 export class InputLoop
 {
     private exitKey: Uint8Array = Uint8Array.from( [ 27 ] ); // ESC
-    private onInput: OnInputEvent = () => {};
-    private onMouse: OnMouseEvent | null = null;
+    private onInputCallback: OnInputEvent = () => {};
+    private onMouseCallback: OnMouseEvent | null = null;
     private alive = false;
 
     private setRaw( raw: boolean ) { return Deno.setRaw( Deno.stdin.rid, raw ); }
@@ -36,9 +36,9 @@ export class InputLoop
         this.exitKey = exitKey;
     }
 
-    public setOnInput( onInput: OnInputEvent ) { this.onInput = onInput; }
+    public set onInput( onInput: OnInputEvent ) { this.onInputCallback = onInput; }
 
-    public setOnMouse( onMouse: OnMouseEvent ) { this.onMouse = onMouse; }
+    public set onMouse( onMouse: OnMouseEvent ) { this.onMouseCallback = onMouse; }
 
     public start()
     {
@@ -88,13 +88,13 @@ export class InputLoop
         if ( this.isExit( buffer, length ) ) { return true; }
         const buf = buffer.slice( 0, length );
 
-        const mouse = this.onMouse && this.isMouse( buf );
+        const mouse = this.onMouseCallback && this.isMouse( buf );
         if ( mouse )
         {
-            await (<OnMouseEvent>this.onMouse)( mouse ) || Promise.resolve();
+            await (<OnMouseEvent>this.onMouseCallback)( mouse ) || Promise.resolve();
         } else
         {
-            await this.onInput( buf ) || Promise.resolve();
+            await this.onInputCallback( buf ) || Promise.resolve();
         }
 
         return false;

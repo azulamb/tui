@@ -148,7 +148,7 @@ export class Tui
 
     public set onResize( onResze: OnResize )
     {
-        this.term.setOnResize( onResze );
+        this.term.onResize = onResze;
     }
 
     public start( init?: () => any )
