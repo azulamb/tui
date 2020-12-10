@@ -1,4 +1,4 @@
-// deno run --unstable example/mouse_ex.ts 
+// deno run --unstable example/mouse_ex.ts
 // ESC ... exit.
 
 import { Tui } from '../tui.ts'
@@ -14,6 +14,7 @@ tui.onMouse = ( event ) =>
 {
     tui.terminal.clear();
     tui.terminal.move( 1 , 1 );
+    console.log( 'Mouse: (Disable)' );
     console.log( event );
 };
 
@@ -21,6 +22,7 @@ tui.onClick = ( event ) =>
 {
     tui.terminal.clear();
     tui.terminal.move( 1 , 1 );
+    console.log( 'Mouse click:' );
     console.log( event );
 }
 
@@ -28,6 +30,7 @@ tui.onWheel = ( event ) =>
 {
     tui.terminal.clear();
     tui.terminal.move( 1 , 1 );
+    console.log( 'Mouse wheel:' );
     console.log( event );
 }
 

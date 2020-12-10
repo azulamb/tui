@@ -1,4 +1,4 @@
-// deno run --unstable example/input.ts 
+// deno run --unstable example/input.ts
 // ESC ... exit.
 
 import { Tui } from '../tui.ts'
