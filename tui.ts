@@ -116,7 +116,7 @@ export class Tui
         this.input.onMouse = onMouse;
     }
 
-    private _onMouse()
+    private onMouseEvent()
     {
         return async ( event: MouseEventData ) =>
         {
@@ -136,14 +136,14 @@ export class Tui
     {
         this.mouse.click = OnClick( onClick );
 
-        this.onMouse = this._onMouse();
+        this.onMouse = this.onMouseEvent();
     }
 
     public set onWheel( onWheel: OnMouseWheel )
     {
         this.mouse.wheel = OnWheel( onWheel );
 
-        this.onMouse = this._onMouse();
+        this.onMouse = this.onMouseEvent();
     }
 
     public set onResize( onResze: OnResize )
@@ -192,7 +192,7 @@ export class Tui
         for ( let y = 0 ; y < box.height ; ++y )
         {
             this.terminal.moveSync( box.x, box.y + y );
-            console.log( strs[ y ] || '' );
+            this.terminal.writeSync( ( new TextEncoder() ).encode( strs[ y ] || '' ) );
         }
     }
 }
