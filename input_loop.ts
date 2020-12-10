@@ -102,7 +102,7 @@ export class InputLoop
 
     private isMouse( buffer: Uint8Array )
     {
-        if ( buffer[ 0 ] !== 27 || buffer[ 1 ] !== 91 && buffer[ 2 ] !== 60 ) { return null; }
+        if ( buffer.length < 9 || buffer[ 0 ] !== 27 || buffer[ 1 ] !== 91 || buffer[ 2 ] !== 60 ) { return null; }
         const mouse: MouseEventData = { x: 0, y: 0, click: false, button: 0, wheel: 0, buffer: buffer };
 
         if ( 48 <= buffer[ 3 ] && buffer[ 3 ] <= 50 )
