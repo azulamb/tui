@@ -1,0 +1,13 @@
+{
+  "lock": false,
+  "tasks": {
+    "build": ""
+  },
+  "lint": {
+    "include": ["./"]
+  },
+  "fmt": {
+    "include": ["./"],
+    "singleQuote": true
+  }
+}
