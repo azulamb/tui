@@ -1,7 +1,9 @@
 {
   "lock": false,
   "tasks": {
-    "build": ""
+    "example:input": "deno run example/input.ts",
+    "example:mouse": "deno run example/mouse.ts",
+    "example:screen": "deno run example/screen.ts"
   },
   "lint": {
     "include": ["./"]

@@ -1,13 +1,12 @@
-// deno run --unstable example/screen.ts
-// ESC ... exit.
-
-import { Tui } from '../tui.ts';
+import { Tui } from '../mod.ts';
 
 const tui = new Tui();
 
 function draw() {
   tui.terminal.clear();
 
+  tui.terminal.move(3, 2);
+  console.log('ESC ... exit.');
   tui.terminal.move(3, 3);
   console.log(`${tui.terminal.width} x ${tui.terminal.height}`);
 

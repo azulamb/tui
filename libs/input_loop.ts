@@ -1,9 +1,11 @@
 export interface OnInputEvent {
   (buf: Uint8Array): void | Promise<unknown>;
 }
+
 export interface OnMouseEvent {
   (event: MouseEventData): void | Promise<unknown>;
 }
+
 export interface MouseEventData {
   x: number;
   y: number;

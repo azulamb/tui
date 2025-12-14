@@ -1,7 +1,4 @@
-// deno run --unstable example/input.ts
-// ESC ... exit.
-
-import { Tui } from '../tui.ts';
+import { Tui } from '../mod.ts';
 
 const tui = new Tui();
 
@@ -12,7 +9,8 @@ tui.enableMouse();
 // You can get mouse input if enableMouse() & do not set onMouse callback.
 tui.onInput = (buffer) => {
   tui.terminal.clear();
-  tui.terminal.move(1, 1);
+  tui.terminal.move(1, 2);
+  console.log('ESC ... exit.');
   console.log(buffer);
 };
 

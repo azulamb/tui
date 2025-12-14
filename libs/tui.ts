@@ -5,10 +5,13 @@ import {
   OnMouseEvent,
 } from './input_loop.ts';
 import { Terminal } from './terminal.ts';
+import { StringEx } from './string.ts';
+import { Box } from './box.ts';
 
 export interface OnMouseClick {
   (event: MouseClickData): void | Promise<unknown>;
 }
+
 export interface MouseClickData {
   x: number;
   y: number;
@@ -17,76 +20,60 @@ export interface MouseClickData {
   button: number;
   msec: number;
 }
+
 export interface OnMouseWheel {
   (event: MouseWheelData): void | Promise<unknown>;
 }
+
 export interface MouseWheelData {
   x: number;
   y: number;
   wheel: -1 | 1;
 }
+
 export interface OnResize {
   (): unknown;
 }
 
-export class StringEx {
-  static split(data: string) {
-    return [...data];
-  }
+function OnClick(onClick: OnMouseClick) {
+  const clicks: { [keys: number]: MouseClickData } = {};
+  // deno-lint-ignore require-await
+  return async (event: MouseEventData) => {
+    if (event.click) {
+      clicks[event.button] = {
+        x: event.x,
+        y: event.y,
+        startX: event.x,
+        startY: event.y,
+        button: event.button,
+        msec: Date.now(),
+      };
+    } else if (clicks[event.button]) {
+      const data = clicks[event.button];
+      data.x = event.x;
+      data.y = event.y;
+      data.msec = Date.now() - data.msec;
+      delete clicks[event.button];
 
-  static splitLines(data: string, width: number) {
-    const lines: string[] = [];
-
-    if (width < 1) {
-      return lines;
+      return onClick(data);
     }
-
-    lines.push('');
-
-    let w = 0;
-    this.split(data).forEach((char) => {
-      const l = this.isWide(char) ? 2 : 1;
-
-      if (w + l <= width) {
-        w += l;
-        lines[lines.length - 1] += char;
-      } else {
-        w = l;
-        lines.push(char);
-      }
-    });
-
-    return lines;
-  }
-
-  static size(data: string) {
-    return this.split(data).length;
-  }
-
-  static width(data: string) {
-    return this.split(data).map((char) => {
-      return this.isWide(char) ? 2 : 1;
-    }).reduce((total, current) => {
-      return total + current;
-    }, 0);
-  }
-
-  static isWide(char: string) {
-    // deno-lint-ignore no-control-regex
-    return !!char.match(/^[^\x01-\x7E\xA1-\xDF]+$/);
-  }
+  };
 }
 
-export class Box {
-  public x: number = 0;
-  public y: number = 0;
-  public width: number | 'auto' = 'auto';
-  public height: number | 'auto' = 'auto';
-  public data: string = '';
-
-  constructor(data?: string) {
-    this.data = data || '';
-  }
+function OnWheel(onWheel: OnMouseWheel) {
+  // deno-lint-ignore require-await
+  return async (event: MouseEventData) => {
+    if (!event.wheel) {
+      return;
+    }
+    return onWheel(
+      {
+        x: event.x,
+        y: event.y,
+        wheel: event.wheel,
+      },
+    );
+  };
 }
 
 export class Tui {
@@ -121,6 +108,7 @@ export class Tui {
   }
 
   private onMouseEvent() {
+    // deno-lint-ignore require-await
     return async (event: MouseEventData) => {
       if (0 < event.button) {
         if (!this.mouse.click) {
@@ -191,43 +179,4 @@ export class Tui {
       this.terminal.writeSync((new TextEncoder()).encode(strings[y] || ''));
     }
   }
-}
-
-function OnClick(onClick: OnMouseClick) {
-  const clicks: { [keys: number]: MouseClickData } = {};
-  return async (event: MouseEventData) => {
-    if (event.click) {
-      clicks[event.button] = {
-        x: event.x,
-        y: event.y,
-        startX: event.x,
-        startY: event.y,
-        button: event.button,
-        msec: Date.now(),
-      };
-    } else if (clicks[event.button]) {
-      const data = clicks[event.button];
-      data.x = event.x;
-      data.y = event.y;
-      data.msec = Date.now() - data.msec;
-      delete clicks[event.button];
-
-      return onClick(data);
-    }
-  };
-}
-
-function OnWheel(onWheel: OnMouseWheel) {
-  return async (event: MouseEventData) => {
-    if (!event.wheel) {
-      return;
-    }
-    return onWheel(
-      {
-        x: event.x,
-        y: event.y,
-        wheel: event.wheel,
-      },
-    );
-  };
 }

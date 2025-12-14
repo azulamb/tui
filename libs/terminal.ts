@@ -31,6 +31,10 @@ export class Terminal {
     this.setWriter(Deno.stdout);
   }
 
+  public get isWindows() {
+    return Deno.build.os === 'windows';
+  }
+
   public set onResize(callback: () => unknown) {
     this.stopMonitorSignal();
     this.onSigwinch = () => {
@@ -38,12 +42,16 @@ export class Terminal {
 
       callback();
     };
-    Deno.addSignalListener('SIGWINCH', this.onSigwinch);
+    if (!this.isWindows) {
+      Deno.addSignalListener('SIGWINCH', this.onSigwinch);
+    }
   }
 
   public stopMonitorSignal() {
     if (this.onSigwinch) {
-      Deno.removeSignalListener('SIGWINCH', this.onSigwinch);
+      if (!this.isWindows) {
+        Deno.removeSignalListener('SIGWINCH', this.onSigwinch);
+      }
       this.onSigwinch = null;
     }
   }
