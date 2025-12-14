@@ -81,15 +81,17 @@ export class Tui {
   private term: Terminal = new Terminal();
   private mouse: { click?: OnMouseEvent; wheel?: OnMouseEvent } = {};
 
-  public get terminal() {
+  public get terminal(): Terminal {
     return this.term;
   }
 
-  public setTerminal(terminal: Terminal) {
+  public setTerminal(terminal: Terminal): this {
     this.term = terminal;
+
+    return this;
   }
 
-  public setExit(exitKey: Uint8Array) {
+  public setExit(exitKey: Uint8Array): this {
     this.input.setExit(exitKey);
 
     return this;
@@ -140,7 +142,7 @@ export class Tui {
     this.term.onResize = onResize;
   }
 
-  public start(init?: () => unknown) {
+  public start(init?: () => unknown): Promise<void> {
     this.term.clearSync();
     this.term.moveSync();
 
@@ -157,16 +159,16 @@ export class Tui {
     });
   }
 
-  private cleanUpTerminal() {
+  private cleanUpTerminal(): void {
     this.term.enableMouseSync(false);
     this.term.stopMonitorSignal();
   }
 
-  public exit() {
+  public exit(): void {
     return this.input.exit();
   }
 
-  public createBox(data?: string) {
+  public createBox(data?: string): Box {
     return new Box(data);
   }
 

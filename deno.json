@@ -5,6 +5,7 @@
   "exports": "./mod.ts",
   "lock": false,
   "tasks": {
+    "check:publish": "deno publish --check",
     "example:input": "deno run example/input.ts",
     "example:mouse": "deno run example/mouse.ts",
     "example:screen": "deno run example/screen.ts"
