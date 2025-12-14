@@ -1,20 +1,32 @@
+/**
+ * Input loop for handling keyboard and mouse events in the terminal.
+ */
 export interface OnInputEvent {
   (buf: Uint8Array): void | Promise<unknown>;
 }
 
+/**
+ * Mouse event callback type.
+ */
 export interface OnMouseEvent {
   (event: MouseEventData): void | Promise<unknown>;
 }
 
+/**
+ * Mouse event data.
+ */
 export interface MouseEventData {
-  x: number;
-  y: number;
+  x: number; // x position.
+  y: number; // y position.
   click: boolean; // Pressed = true, Released = false
   button: number; // Left click = 1, Wheel click = 2, Right click = 3
   wheel: -1 | 1 | 0; // No wheel = 0, Up = -1, Down = 1
-  buffer: Uint8Array;
+  buffer: Uint8Array; // raw buffer data.
 }
 
+/**
+ * InputLoop class
+ */
 export class InputLoop {
   private exitKey: Uint8Array = Uint8Array.from([27]); // ESC
   private onInputCallback: OnInputEvent = () => {};
@@ -39,19 +51,36 @@ export class InputLoop {
     return true;
   }
 
-  public setExit(exitKey: Uint8Array) {
+  /**
+   * Set the key sequence that will cause the input loop to exit.
+   * @param exitKey The key sequence to exit on.
+   */
+  public setExit(exitKey: Uint8Array): this {
     this.exitKey = exitKey;
+    return this;
   }
 
+  /**
+   * Set input event callback.
+   * @param onInput The input event callback.
+   */
   public set onInput(onInput: OnInputEvent) {
     this.onInputCallback = onInput;
   }
 
+  /**
+   * Set mouse event callback.
+   * @param onMouse The mouse event callback.
+   */
   public set onMouse(onMouse: OnMouseEvent) {
     this.onMouseCallback = onMouse;
   }
 
-  public start() {
+  /**
+   * Start the input loop.
+   * @returns A promise that resolves when the loop ends.
+   */
+  public start(): Promise<void> {
     return this.loop().catch((error) => {
       this.end();
       throw error;
@@ -68,13 +97,16 @@ export class InputLoop {
     this.setRaw(false);
   }
 
-  public exit() {
+  /**
+   * Exit the input loop.
+   */
+  public exit(): void {
     this.end();
 
     Deno.stdin.close();
   }
 
-  private async loop() {
+  private async loop(): Promise<void> {
     this.setRaw(true);
 
     const readBuf = new Uint8Array(32);

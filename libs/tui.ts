@@ -8,10 +8,16 @@ import { Terminal } from './terminal.ts';
 import { StringEx } from './string.ts';
 import { Box } from './box.ts';
 
+/**
+ * Mouse click event callback type.
+ */
 export interface OnMouseClick {
   (event: MouseClickData): void | Promise<unknown>;
 }
 
+/**
+ * Mouse click event data.
+ */
 export interface MouseClickData {
   x: number;
   y: number;
@@ -21,16 +27,25 @@ export interface MouseClickData {
   msec: number;
 }
 
+/**
+ * Mouse wheel event callback type.
+ */
 export interface OnMouseWheel {
   (event: MouseWheelData): void | Promise<unknown>;
 }
 
+/**
+ * Mouse wheel event data.
+ */
 export interface MouseWheelData {
   x: number;
   y: number;
   wheel: -1 | 1;
 }
 
+/**
+ * Resize event callback type.
+ */
 export interface OnResize {
   (): unknown;
 }
@@ -76,15 +91,25 @@ function OnWheel(onWheel: OnMouseWheel) {
   };
 }
 
+/**
+ * Tui class
+ */
 export class Tui {
   private input: InputLoop = new InputLoop();
   private term: Terminal = new Terminal();
   private mouse: { click?: OnMouseEvent; wheel?: OnMouseEvent } = {};
 
+  /**
+   * Get terminal instance.
+   */
   public get terminal(): Terminal {
     return this.term;
   }
 
+  /**
+   * Set terminal instance.
+   * @param terminal Terminal instance to set.
+   */
   public setTerminal(terminal: Terminal): this {
     this.term = terminal;
 

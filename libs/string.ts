@@ -1,9 +1,23 @@
+/**
+ * String utilities.
+ */
 export class StringEx {
-  static split(data: string) {
+  /**
+   * Split a string into an array of characters.
+   * @param data The string to split.
+   * @returns An array of characters.
+   */
+  static split(data: string): string[] {
     return [...data];
   }
 
-  static splitLines(data: string, width: number) {
+  /**
+   * Split a string into lines of a specified width.
+   * @param data The string to split.
+   * @param width The width of each line.
+   * @returns An array of lines.
+   */
+  static splitLines(data: string, width: number): string[] {
     const lines: string[] = [];
 
     if (width < 1) {
@@ -28,11 +42,21 @@ export class StringEx {
     return lines;
   }
 
-  static size(data: string) {
+  /**
+   * Get the number of characters in a string.
+   * @param data The string to measure.
+   * @returns The number of characters.
+   */
+  static size(data: string): number {
     return this.split(data).length;
   }
 
-  static width(data: string) {
+  /**
+   * Get the width of a string.
+   * @param data The string to measure.
+   * @returns The width of the string.
+   */
+  static width(data: string): number {
     return this.split(data).map((char) => {
       return this.isWide(char) ? 2 : 1;
     }).reduce((total, current) => {
@@ -40,7 +64,12 @@ export class StringEx {
     }, 0);
   }
 
-  static isWide(char: string) {
+  /**
+   * Check if a character is wide (full-width).
+   * @param char The character to check.
+   * @returns True if the character is wide, false otherwise.
+   */
+  static isWide(char: string): boolean {
     // deno-lint-ignore no-control-regex
     return !!char.match(/^[^\x01-\x7E\xA1-\xDF]+$/);
   }
