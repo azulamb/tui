@@ -1,5 +1,5 @@
-import {
-  InputLoop,
+import { InputLoop } from './input_loop.ts';
+import type {
   MouseEventData,
   OnInputEvent,
   OnMouseEvent,
